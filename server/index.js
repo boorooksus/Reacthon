@@ -17,13 +17,13 @@ app.get('/', (req, res) => {
 
 app.post('/api/compiler', (req, res) => {
 
-  var sanitizedCode = `import time, sys, base64;start = time.time();sys.stdout=open('./server/output.out', 'w', encoding='utf8');
+  var code = `import time, sys, base64;start = time.time();sys.stdout=open('./server/output.out', 'w', encoding='utf8');
 ` + 
-  sanitizeHtml(req.body.code) +
-  `
+  req.body.code +
+`
 sys.stdout=open('./server/running_time.out', 'w', encoding='utf8');print('Running time: ',end='');print(time.time() - start)`;
 
-  fs.writeFile(`./server/exec.py`, sanitizedCode, function(err){
+  fs.writeFile(`./server/exec.py`, code, function(err){
     // 파이썬 파일을 실행
     var options = {
       mode: 'text',
@@ -40,7 +40,7 @@ sys.stdout=open('./server/running_time.out', 'w', encoding='utf8');print('Runnin
       } else{
         fs.readFile('./server/output.out', 'utf8', function(err, data){
           fs.readFile('./server/running_time.out', 'utf8', function(err2, data2){
-            return res.json({ success: true, result: data, runningTime: data2})
+            return res.json({ success: true, result: sanitizeHtml(data), runningTime: data2})
           })
         })
       }
