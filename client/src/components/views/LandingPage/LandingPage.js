@@ -37,11 +37,16 @@ function LandingPage() {
 
         Axios.post('/api/compiler', body)
             .then(response => {
-                console.log('data: ', response.data)
+                console.log('data: ', response.data.result)
 
                 var result = response.data.result;
 
-                setResult(result.split('\n').map((str, index) => <p key={index}>{str}</p>))
+
+                // setResult(result.split('\n').map((str, index) => <p key={index}>{str}</p>))
+                setResult(result)
+
+
+                console.log(Result);
 
                 setRunningTime(response.data.runningTime)
                 setRunButton('Run')
@@ -69,9 +74,11 @@ function LandingPage() {
             </Grid.Column>
 
             <Grid.Column>
-                <Segment style={{fontSize: 20}}>
-                    <Segment style={{height: 540}}>
-                    {Result}
+                <Segment>
+                    <Segment style={{overflow: 'auto', height: 540, fontSize: 20}}>
+                        <pre>
+                        {Result}
+                        </pre>
                     </Segment>
                     <p>{RunningTime}</p>
                 </Segment>
