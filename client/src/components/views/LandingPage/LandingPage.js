@@ -7,6 +7,7 @@ function LandingPage() {
     const [Code, setCode] = useState("")
     const [RunButton, setRunButton] = useState('Run')
     const [Result, setResult] = useState('. . .')
+    const [RunningTime, setRunningTime] = useState('')
 
     const editor = (event) => {
         if(event.keyCode===9){
@@ -26,8 +27,7 @@ function LandingPage() {
         setCode(event.currentTarget.value)
     }
 
-    const test = (event) => {
-        console.log(event)
+    const compiler = (event) => {
 
         setRunButton(<Icon loading name='spinner' />)
 
@@ -37,17 +37,13 @@ function LandingPage() {
 
         Axios.post('/api/compiler', body)
             .then(response => {
-                if (response.data.success) {
-                    console.log(response.data);
-                    //setResult(response.data)
-                    var result = response.data.result;
+                console.log('data: ', response.data)
 
-                    setResult(result.split('\n').map((str, index) => <p key={index}>{str}</p>))
+                var result = response.data.result;
 
-                } else {
-                    alert('오류가 발생했습니다.')
-                }
+                setResult(result.split('\n').map((str, index) => <p key={index}>{str}</p>))
 
+                setRunningTime(response.data.runningTime)
                 setRunButton('Run')
             })
     }
@@ -64,17 +60,20 @@ function LandingPage() {
             <Grid.Column >
                 <Segment >
                 <Form action = "/" method="post">
-                    <TextArea id="myCode" placeholder="# Enter your code" name="description" rows="20" onKeyDown={editor} onChange={codeHandler} value={Code} ></TextArea>
+                    <TextArea id="myCode" placeholder="# Enter your code" name="description" rows="20" onKeyDown={editor} onChange={codeHandler} value={Code} style={{fontSize: 20}} ></TextArea>
                 </Form>
                 <br />
 
-                <Button primary onClick={test}>{RunButton}</Button>
+                <Button primary onClick={compiler}>{RunButton}</Button>
                 </Segment>
             </Grid.Column>
 
             <Grid.Column>
-                <Segment>
+                <Segment style={{fontSize: 20}}>
+                    <Segment style={{height: 540}}>
                     {Result}
+                    </Segment>
+                    <p>{RunningTime}</p>
                 </Segment>
             </Grid.Column>
             </Grid.Row>

@@ -17,16 +17,11 @@ app.get('/', (req, res) => {
 
 app.post('/api/compiler', (req, res) => {
 
-  console.log(req.body);
-
-  // console.log('res: ', res)
-  // console.log('res.req: ', res.req)
-
   var sanitizedCode = `import time, sys, base64;start = time.time();sys.stdout=open('./server/output.out', 'w', encoding='utf8');
 ` + 
   sanitizeHtml(req.body.code) +
   `
-print();print('Running time: ',end='');print(time.time() - start)`;
+sys.stdout=open('./server/running_time.out', 'w', encoding='utf8');print('Running time: ',end='');print(time.time() - start)`;
 
   fs.writeFile(`./server/exec.py`, sanitizedCode, function(err){
     // 파이썬 파일을 실행
@@ -40,13 +35,13 @@ print();print('Running time: ',end='');print(time.time() - start)`;
 
     PythonShell.run('/exec.py', options, function (err, results){
       if (err) {
-        console.log('err: ', err.message);
-        return res.json({ success: false, errorMessage: err.message })
+        return res.json({ success: false, result: err.message })
       
       } else{
         fs.readFile('./server/output.out', 'utf8', function(err, data){
-          console.log('data: ', data);
-          return res.json({ success: true, result: data})
+          fs.readFile('./server/running_time.out', 'utf8', function(err2, data2){
+            return res.json({ success: true, result: data, runningTime: data2})
+          })
         })
       }
     })
