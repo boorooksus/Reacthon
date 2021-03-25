@@ -1,13 +1,16 @@
 import React, {useState} from 'react'
 import { Button, Header, Segment, Grid, Form, TextArea, Icon } from 'semantic-ui-react'
 import Axios from 'axios';
+// import RunButton2 from './Sections/RunButton';
 
 function LandingPage() {
 
     const [Code, setCode] = useState("")
     const [RunButton, setRunButton] = useState('Run')
-    const [Result, setResult] = useState('. . .')
+    const [RunColor, setRunColor] = useState('blue')
+    const [Result, setResult] = useState('...')
     const [RunningTime, setRunningTime] = useState('')
+    const [IsRunning, setIsRunning] = useState(false)
 
     const editor = (event) => {
         if(event.keyCode===9){
@@ -27,9 +30,11 @@ function LandingPage() {
         setCode(event.currentTarget.value)
     }
 
-    const compiler = (event) => {
+    const compiler = () => {
 
         setRunButton(<Icon loading name='spinner' />)
+        setRunColor('grey')
+        setIsRunning(true)
 
         const body={
             code: Code
@@ -37,19 +42,16 @@ function LandingPage() {
 
         Axios.post('/api/compiler', body)
             .then(response => {
-                console.log('data: ', response.data.result)
 
                 var result = response.data.result;
-
 
                 // setResult(result.split('\n').map((str, index) => <p key={index}>{str}</p>))
                 setResult(result)
 
-
-                console.log(Result);
-
                 setRunningTime(response.data.runningTime)
                 setRunButton('Run')
+                setRunColor('blue')
+                setIsRunning(false)
             })
     }
 
@@ -69,7 +71,9 @@ function LandingPage() {
                 </Form>
                 <br />
 
-                <Button primary onClick={compiler}>{RunButton}</Button>
+                <Button style={{width:80}} color={RunColor} onClick={compiler}>{RunButton}</Button>
+
+                {/* <RunButton2 isRunning={IsRunning} compiler={() => compiler() } /> */}
                 </Segment>
             </Grid.Column>
 
