@@ -33,6 +33,7 @@ function LandingPage() {
     }
 
     // 코드 컴파일 함수
+    // changeButton: 콜백 함수, isRunning: 콜백 함수에 넣을 패러미터
     const compiler = (changeButton, isRunning) => {
         const body={
             code: Code
@@ -71,6 +72,7 @@ function LandingPage() {
                 </Form>
                 <br />
                 {/* 컴파일 실행 버튼 */}
+                {/* 자식 컴포넌트로 props 보냄 */}
                 <RunButton compiler={(changeButton, isRunning )=> compiler(changeButton, isRunning) } />
                 </Segment>
             </Grid.Column>
