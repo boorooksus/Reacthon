@@ -1,21 +1,22 @@
 import React, {useState} from 'react'
-import { Button, Header, Segment, Grid, Form, TextArea, Icon } from 'semantic-ui-react'
+import {  Header, Segment, Grid, Form, TextArea } from 'semantic-ui-react'
 import Axios from 'axios';
-// import RunButton2 from './Sections/RunButton';
+import RunButton from './Sections/RunButton';
 
+// 메인 페이지
 function LandingPage() {
 
-    const [Code, setCode] = useState("")
-    const [RunButton, setRunButton] = useState('Run')
-    const [RunColor, setRunColor] = useState('blue')
-    const [Result, setResult] = useState('...')
-    const [RunningTime, setRunningTime] = useState('')
-    const [IsRunning, setIsRunning] = useState(false)
+    const [Code, setCode] = useState("")  // 입력된 코드
+    const [Result, setResult] = useState('...')  // 컴파일 결과
+    const [RunningTime, setRunningTime] = useState('')  // 코드의 수행 시간
 
+    // 입력창에서 Tab 키를 눌렀을 때 
+    // 다른 항목으로 넘어가지 않고 '\t'를 입력하게 하는 함수
     const editor = (event) => {
         if(event.keyCode===9){
-
+            // 키보드에서 탭 키가 입력됐을 때
             event.preventDefault();
+
             var v=event.currentTarget.value
             var s=event.currentTarget.selectionStart
             var e=event.currentTarget.selectionEnd;
@@ -26,20 +27,18 @@ function LandingPage() {
 
     }
 
+    // 파이썬 코드 입력 Handling
     const codeHandler = (event) => {
         setCode(event.currentTarget.value)
     }
 
-    const compiler = () => {
-
-        setRunButton(<Icon loading name='spinner' />)
-        setRunColor('grey')
-        setIsRunning(true)
-
+    // 코드 컴파일 함수
+    const compiler = (changeButton, isRunning) => {
         const body={
             code: Code
         }
 
+        // 서버로 코드 데이터 전송
         Axios.post('/api/compiler', body)
             .then(response => {
 
@@ -49,9 +48,9 @@ function LandingPage() {
                 setResult(result)
 
                 setRunningTime(response.data.runningTime)
-                setRunButton('Run')
-                setRunColor('blue')
-                setIsRunning(false)
+
+                changeButton(isRunning)
+
             })
     }
 
@@ -66,24 +65,26 @@ function LandingPage() {
             <Grid.Row stretched>
             <Grid.Column >
                 <Segment >
+                {/* 파이썬 코드 입력창 */}
                 <Form action = "/" method="post">
                     <TextArea id="myCode" placeholder="# Enter your code" name="description" rows="20" onKeyDown={editor} onChange={codeHandler} value={Code} style={{fontSize: 20}} ></TextArea>
                 </Form>
                 <br />
-
-                <Button style={{width:80}} color={RunColor} onClick={compiler}>{RunButton}</Button>
-
-                {/* <RunButton2 isRunning={IsRunning} compiler={() => compiler() } /> */}
+                {/* 컴파일 실행 버튼 */}
+                <RunButton compiler={(changeButton, isRunning )=> compiler(changeButton, isRunning) } />
                 </Segment>
             </Grid.Column>
 
             <Grid.Column>
                 <Segment>
+                    {/* 컴파일 결과창 */}
                     <Segment style={{overflow: 'auto', height: 540, fontSize: 20}}>
+                        {/* pre tag를 사용해야 출력할 때 new line과 띄어쓰기가 유지됨. */}
                         <pre>
                         {Result}
                         </pre>
                     </Segment>
+                    {/* 코드 수행 시간 */}
                     <p>{RunningTime}</p>
                 </Segment>
             </Grid.Column>
