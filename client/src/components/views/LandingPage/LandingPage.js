@@ -68,7 +68,7 @@ function LandingPage() {
                 <Segment >
                 {/* 파이썬 코드 입력창 */}
                 <Form action = "/" method="post">
-                    <TextArea id="myCode" placeholder="# Enter your code" name="description" rows="20" onKeyDown={editor} onChange={codeHandler} value={Code} style={{fontSize: 20}} ></TextArea>
+                    <TextArea id="myCode" placeholder="# Enter your code" name="description" rows="15" onKeyDown={editor} onChange={codeHandler} value={Code} style={{fontSize: 20}} ></TextArea>
                 </Form>
                 <br />
                 {/* 컴파일 실행 버튼 */}
@@ -80,7 +80,7 @@ function LandingPage() {
             <Grid.Column>
                 <Segment>
                     {/* 컴파일 결과창 */}
-                    <Segment style={{overflow: 'auto', height: 540, fontSize: 20}}>
+                    <Segment style={{overflow: 'auto', height: 408, fontSize: 20, fontWeight: 'bold'}}>
                         {/* pre tag를 사용해야 출력할 때 new line과 띄어쓰기가 유지됨. */}
                         <pre>
                         {Result}
