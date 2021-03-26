@@ -33,8 +33,8 @@ function LandingPage() {
     }
 
     // 코드 컴파일 함수
-    // changeButton: 콜백 함수, isRunning: 콜백 함수에 넣을 패러미터
-    const compiler = (changeButton, isRunning) => {
+    // changeButton: 콜백 함수
+    const compiler = (changeButton) => {
         const body={
             code: Code
         }
@@ -50,7 +50,7 @@ function LandingPage() {
 
                 setRunningTime(response.data.runningTime)
 
-                changeButton(isRunning)
+                changeButton(false)
 
             })
     }

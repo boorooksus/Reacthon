@@ -27,9 +27,8 @@ function RunButton(props) {
     const buttonHandler = () => {
         changeButton(true)
 
-        // changeButton() 함수를 콜백함수로 사용하기 위해 첫 번째 패러미터로 넘기고, 
-        // changeButton함수의 패러미터를 두 번째 인자로 넘기
-        props.compiler(changeButton, false)
+        // changeButton() 함수를 콜백함수로 사용하기 위해 패러미터로 넘김.
+        props.compiler(changeButton)
     }
 
     return (
