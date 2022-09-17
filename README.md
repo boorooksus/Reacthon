@@ -1,6 +1,6 @@
-# React-Python-Running-Web-App
+# Reacthon
 
-### React와 Node.js 를 이용한 파이썬 코드 실행 웹 어플리케이션
+### React를 이용한 Python 코드 실행 웹 어플리케이션
 
 
 
